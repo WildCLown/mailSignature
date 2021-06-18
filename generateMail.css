@@ -1,0 +1,56 @@
+body{
+    background-image: url("https://wallpaperaccess.com/full/2029165.jpg");
+    background-repeat: no-repeat;
+    background-size: 100%;
+}
+#htmlText{
+    width: 300px;
+    height: 200px;
+}
+#outputImg{
+    background-color: white;
+}
+#formArea{
+    margin: auto;
+    background-color: #C8C8C8;
+    justify-content: center;
+    width: 400px;
+    box-shadow: 3px 3px 2px rgb(54, 54, 54);
+}
+#formResult{
+    margin: auto;
+    background-color: #C8C8C8;
+    justify-content: center;
+    width: 400px;
+    display: none;
+    padding-bottom: 20px;
+    padding-top: 20px;
+    box-shadow: 3px 3px 2px rgb(54, 54, 54);
+}
+
+#buttCopy{
+    display: block;
+    margin: auto;
+    margin-bottom: 20px;
+    margin-top: 20px;
+    width: 200px;
+}
+
+#htmlText{
+    margin: auto;
+    display: block;
+}
+#formTable{
+    margin: auto;
+    padding-top: 3%;
+    padding-bottom: 3%;
+}
+th{
+    text-align: left;
+}
+
+input::-webkit-outer-spin-button,
+	input::-webkit-inner-spin-button {
+	-webkit-appearance: none;
+	margin: 0;
+	}
