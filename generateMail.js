@@ -1,5 +1,4 @@
 var nome      = "";
-var ddd       = "";
 var celular   = "";
 var mail      = "";
 var corpPhone = "";
@@ -8,44 +7,82 @@ var isHoliday = false;
 var isVacation = false;
 var vacationAlert = "";
 var holidayAlert = "";
-
+var startVacation = "";
+var endVacation = "";
+var startHoliday = "";
+var endHoliday = "";
+////////////////////////////////////////////////////////
+/* Máscaras ER */
+function mascara(o,f){
+  v_obj=o
+  v_fun=f
+  setTimeout("execmascara()",1)
+}
+function execmascara(){
+  v_obj.value=v_fun(v_obj.value)
+}
+function mtel(v){
+  v=v.substring(4).replace(/\D/g,""); //Remove tudo o que não é dígito
+  v=v.replace(/^(\d{2})(\d)/g,"($1) $2"); //Coloca parênteses em volta dos dois primeiros dígitos
+  v=v.replace(/(\d)(\d{4})$/,"$1-$2"); //Coloca hífen entre o quarto e o quinto dígitos
+  return "+55 " + v;
+}
+function id( el ){
+  return document.getElementById( el );
+}
+window.onload = function(){
+    id('celular').onkeyup = function(){
+      mascara( this, mtel );
+    }
+    id('corpPhone').onkeyup = function(){
+      mascara( this, mtel );
+    }
+}
+////////////////////////////////////////////////////////
   function tryGenerateRodape(){
     nome = document.getElementById("nome").value;
-    ddd = document.getElementById("ddd").value;
     celular = document.getElementById("celular").value;
     mail = document.getElementById("mail").value;
     corpPhone = document.getElementById("corpPhone").value;
     skypeId = document.getElementById("skype").value;
-    
+    startVacation = document.getElementById("startVacation").value;
+    endVacation = document.getElementById("endVacation").value;
+    startHoliday = document.getElementById("startHoliday").value;
+    endHoliday = document.getElementById("endHoliday").value;
     vacationAlert = (isVacation?
-      "<tr><th colspan=\"2\" style=\"text-align:left;font-family:Bahnschrift;font-size:12pt;\"><b style=\"Color:red;\"> *Vacation Alert : " + fixDate(document.getElementById("startVacation").value) + " - " +
-      fixDate(document.getElementById("endVacation").value)   + "</b><br></th></tr>"
+      "<tr><th colspan=\"2\" style=\"text-align:left;font-family:Bahnschrift;font-size:12pt;\"><b style=\"Color:red;\"> *Vacation Alert : " + fixDate(startVacation) + " - " +
+      fixDate(endVacation)   + "</b><br></th></tr>"
       :"");
-      var sameDay = fixDate(document.getElementById("startHoliday").value) == fixDate(document.getElementById("endHoliday").value);
+      var sameDay = startHoliday == endHoliday ||
+      startHoliday == "" || endHoliday == "";
       if(isHoliday){
         if(sameDay){
-          holidayAlert = "<tr><th colspan=\"2\" style=\"text-align:left;font-family:Bahnschrift;font-size:12pt;\"><b style=\"Color:red;\"> *Upcoming Holiday : " + fixDate(document.getElementById("startHoliday").value) + 
+          holidayAlert = "<tr><th colspan=\"2\" style=\"text-align:left;font-family:Bahnschrift;font-size:12pt;\"><b style=\"Color:red;\"> *Upcoming Holiday : " + fixDate(
+            (startHoliday == ""?endHoliday :startHoliday)) + 
           "</b><br></th></tr>";
         }else{
-          holidayAlert = "<tr><th colspan=\"2\" style=\"text-align:left;font-family:Bahnschrift;font-size:12pt;\"><b style=\"Color:red;\"> *Upcoming Holiday : " + fixDate(document.getElementById("startHoliday").value) + " - " +
-          fixDate(document.getElementById("endHoliday").value)   + "</b><br></th></tr>";
+          holidayAlert = "<tr><th colspan=\"2\" style=\"text-align:left;font-family:Bahnschrift;font-size:12pt;\"><b style=\"Color:red;\"> *Upcoming Holiday : " + fixDate(startHoliday) + " - " +
+          fixDate(endHoliday)   + "</b><br></th></tr>";
         }
       }else{
         holidayAlert = "";
       }
-      if(nome == "" || mail == "@midiavox.com.br"){
+      if(nome == "" || mail == "@midiavox.com.br" || (isHoliday && (startHoliday == "" && endHoliday == "")) ||
+      (isVacation && (startVacation == "" || endVacation == ""))){
+        console.log("%%%%" + startHoliday);
+        console.log("%%%%" + endHoliday);
         alert(
           "Por favor, preencha os seguintes campos : \n" +
-          (nome == "" ? "Nome\n":"") +
-          (mail == "@midiavox.com.br" ? "E-mail\n":"")
-          )
+          (nome == "" ? "'Nome'\n":"") +
+          (mail == "@midiavox.com.br" ? "'E-mail'\n":"") +
+          ((isHoliday && (startHoliday == "" && endHoliday == ""))? "'Inicio' e 'Fim' de 'Aviso de feriado'\n":"") +
+          ((isVacation && (startVacation == "" || endVacation == ""))? "'Inicio' e 'Fim' de 'Aviso de ferias'\n":""))
         }else{
           celular = fixCelular(celular);
           generateRodape();
         }
         
         console.log("####" + nome + "####");
-        console.log("####" + ddd + "####");
         console.log("####" + celular + "####");
         console.log("####" + mail + "####");
         console.log("####" + corpPhone + "####");
@@ -55,17 +92,14 @@ var holidayAlert = "";
   }
   function fixDate(date){
     console.log("####" + date + "####");
-    var fixDate = date.split('-');
+    var fixedDate = date.split('-');
 
     // fixDate = fixDate[1]+"-"+fixDate[2]+"-"+fixDate[0];
-    fixDate = new Date(fixDate[0], fixDate[1], fixDate[2]);
-    console.log("#### FIXDATE : " + fixDate + "####");
+    fixedDate = new Date(fixedDate[0], fixedDate[1]-1, fixedDate[2]);
+    console.log("#### FIXDATE : " + fixedDate + "####");
     var answer = "";
-    if(true) {
-      answer = fixDate.toString().substring(3,7) + " " + setNum(fixDate.toString().substring(8,10)) + " " + fixDate.toString().substring(11,15);
-    }else {
-      answer = fixDate.toString().substring(3,8) + setNum(fixDate.toString().substring(8,10)) + fixDate.toString().substring(10,15);
-    }
+    answer = fixedDate.toString().substring(3,7) + " " + setNum(fixedDate.toString().substring(8,10)) + 
+    " " + fixedDate.toString().substring(11,15);
     return answer;
   }
   function setNum(num){
@@ -108,8 +142,8 @@ var holidayAlert = "";
     "<b>" + nome + "</b>"+
     "</div>"+
     "<div style=\"font-size:11pt;font-family:Bahnschrift;color:black;display: inline-block;font-weight: normal;\">"+
-    (celular   == "" ? "" : "Mobile: +55 "+ ddd + " "+ celular + "<br>") +
-    (corpPhone == "" ? "Corporate: +55 81 3412-0900<br>" : "Corporate: +55 81 " +corpPhone + "<br>") +
+    (celular   == "+55 81" || celular.length < 14 ? "" : "Mobile: " + celular + "<br>") +
+    "Corporate: " + corpPhone + "<br>" +
     (skypeId   == "" ? "":"Skype : " + skypeId + "<br>") +
     "<a href=\"mailto:"+ mail + "\" style=\"color:#17365D\">" + mail + "</a><br>"+
     "<a href=\"http://www.midiavox.com.br\" style=\"color:#17365D\">www.midiavox.com.br</a><br>" +
