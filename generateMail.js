@@ -1,3 +1,4 @@
+
 var nome      = "";
 var celular   = "";
 var mail      = "";
@@ -5,8 +6,11 @@ var corpPhone = "";
 var skypeId   = "";
 var isHoliday = false;
 var isVacation = false;
+var isOffice = false;
 var vacationAlert = "";
 var holidayAlert = "";
+var holidayList = [];
+var officeAlert = "";
 var startVacation = "";
 var endVacation = "";
 var startHoliday = "";
@@ -39,9 +43,14 @@ window.onload = function(){
     }
 }
 ////////////////////////////////////////////////////////
+  function waitToTry(){
+    setTimeout(function(){
+      tryGenerateRodape();
+    },100);
+  }
   function tryGenerateRodape(){
-    nome = document.getElementById("nome").value;
     celular = document.getElementById("celular").value;
+    nome = document.getElementById("nome").value;
     mail = document.getElementById("mail").value;
     corpPhone = document.getElementById("corpPhone").value;
     skypeId = document.getElementById("skype").value;
@@ -49,54 +58,108 @@ window.onload = function(){
     endVacation = document.getElementById("endVacation").value;
     startHoliday = document.getElementById("startHoliday").value;
     endHoliday = document.getElementById("endHoliday").value;
+    startOffice = document.getElementById("startOffice").value;
+    endOffice = document.getElementById("endOffice").value;
     vacationAlert = (isVacation?
       "<tr><th colspan=\"2\" style=\"text-align:left;font-family:Bahnschrift;font-size:12pt;\"><b style=\"Color:red;\"> *Vacation Alert : " + fixDate(startVacation) + " - " +
       fixDate(endVacation)   + "</b><br></th></tr>"
       :"");
-      var sameDay = startHoliday == endHoliday ||
+      let sameDay = startHoliday == endHoliday ||
       startHoliday == "" || endHoliday == "";
-      if(isHoliday){
-        if(sameDay){
-          holidayAlert = "<tr><th colspan=\"2\" style=\"text-align:left;font-family:Bahnschrift;font-size:12pt;\"><b style=\"Color:red;\"> *Upcoming Holiday : " + fixDate(
-            (startHoliday == ""?endHoliday :startHoliday)) + 
+      if(isHoliday && holidayList.length != 0){
+        let auxHoliday = "";
+        for(let i = 0; i<holidayList.length;i++){
+          if(i==holidayList.length-1){
+            auxHoliday += holidayList[i];
+          }else{
+            auxHoliday += holidayList[i] + "<br>";
+          }
+        }
+        if(holidayList.length == 1){
+          holidayAlert = "<tr><th colspan=\"2\" style=\"text-align:left;font-family:Bahnschrift;font-size:12pt;\"><b style=\"Color:red;\"> *Upcoming Holiday : " + auxHoliday + 
           "</b><br></th></tr>";
         }else{
-          holidayAlert = "<tr><th colspan=\"2\" style=\"text-align:left;font-family:Bahnschrift;font-size:12pt;\"><b style=\"Color:red;\"> *Upcoming Holiday : " + fixDate(startHoliday) + " - " +
-          fixDate(endHoliday)   + "</b><br></th></tr>";
+          holidayAlert = "<tr><th colspan=\"2\" style=\"text-align:left;font-family:Bahnschrift;font-size:12pt;\"><b style=\"Color:red;\"> *Upcoming Holidays : <br>" + auxHoliday + 
+          "</b><br></th></tr>";
         }
+        auxHoliday = "";
       }else{
         holidayAlert = "";
       }
-      if(nome == "" || mail == "@midiavox.com.br" || (isHoliday && (startHoliday == "" && endHoliday == "")) ||
-      (isVacation && (startVacation == "" || endVacation == ""))){
-        console.log("%%%%" + startHoliday);
-        console.log("%%%%" + endHoliday);
-        alert(
-          "Por favor, preencha os seguintes campos : \n" +
-          (nome == "" ? "'Nome'\n":"") +
-          (mail == "@midiavox.com.br" ? "'E-mail'\n":"") +
-          ((isHoliday && (startHoliday == "" && endHoliday == ""))? "'Inicio' e 'Fim' de 'Aviso de feriado'\n":"") +
-          ((isVacation && (startVacation == "" || endVacation == ""))? "'Inicio' e 'Fim' de 'Aviso de ferias'\n":""))
+      sameDay = startOffice == endOffice ||
+      startOffice == "" || endOffice == "";
+      if(isOffice){
+        if(sameDay){
+          officeAlert = "<tr><th colspan=\"2\" style=\"text-align:left;font-family:Bahnschrift;font-size:12pt;\"><b style=\"Color:red;\"> *Out of office : " + fixDate(
+            (startOffice == ""?endOffice :startOffice)) + 
+          "</b><br></th></tr>";
         }else{
+          officeAlert = "<tr><th colspan=\"2\" style=\"text-align:left;font-family:Bahnschrift;font-size:12pt;\"><b style=\"Color:red;\"> *Out of office : " + fixDate(startOffice) + " - " +
+          fixDate(endOffice)   + "</b><br></th></tr>";
+        }
+      }else{
+        officeAlert = "";
+      }
+      // if(nome == "" || mail == "@midiavox.com.br" || (isHoliday && (startHoliday == "" && endHoliday == "")) ||
+      // (isVacation && (startVacation == "" || endVacation == ""))){
+        // console.log("%%%%" + startHoliday);
+        // console.log("%%%%" + endHoliday);
+        // alert(
+        //   "Por favor, preencha os seguintes campos : \n" +
+        //   (nome == "" ? "'Nome'\n":"") +
+        //   (mail == "@midiavox.com.br" ? "'E-mail'\n":"") +
+        //   ((isHoliday && (startHoliday == "" && endHoliday == ""))? "'Inicio' e 'Fim' de 'Aviso de feriado'\n":"") +
+        //   ((isVacation && (startVacation == "" || endVacation == ""))? "'Inicio' e 'Fim' de 'Aviso de ferias'\n":""))
+        //}else{
           celular = fixCelular(celular);
           generateRodape();
-        }
+        //}
         
-        console.log("####" + nome + "####");
-        console.log("####" + celular + "####");
-        console.log("####" + mail + "####");
-        console.log("####" + corpPhone + "####");
-        console.log("####" + skypeId + "####");
-        console.log("####" + sameDay + "####");
-        console.log("####" + holidayAlert + "####");    
+        // console.log("####" + nome + "####");
+        // console.log("####" + celular + "####");
+        // console.log("####" + mail + "####");
+        // console.log("####" + corpPhone + "####");
+        // console.log("####" + skypeId + "####");
+        // console.log("####" + sameDay + "####");
+        // console.log("####" + holidayAlert + "####");    
+  }
+  function addHoliday(){
+    if(holidayList.length < 3){
+      let startHoliday = document.getElementById("startHoliday").value;
+      let endHoliday = document.getElementById("endHoliday").value;
+      let sameDay = startHoliday == endHoliday ||
+        startHoliday == "" || endHoliday == "";
+      if(sameDay){
+        holidayList.push(fixDate((startHoliday == ""?endHoliday :startHoliday)));
+      }else{
+        holidayList.push(fixDate(startHoliday) + " - " + fixDate(endHoliday));
+      }
+      let list = document.getElementById("listEraseButt");
+      list.style.display = "table-cell";
+      list.innerHTML = `<button class="eraseButt" onclick="removeHoliday(${list.childElementCount})">Remover</button>`;
+      tryGenerateRodape();
+    }else{
+      alert("Só é possível colocar até 3 feriados");
+    }
+  }
+  function removeHoliday(i){
+    let list = document.getElementById("listEraseButt");
+    holidayList.splice(i,1);
+    list.children[list.childElementCount-1].remove();
+    if(holidayList.length == 0){
+      list.style.display = "none";
+    }else{
+      list.innerHTML = `<button class="eraseButt" onclick="removeHoliday(${list.childElementCount})">Remover</button>`;
+    }
+    tryGenerateRodape();
   }
   function fixDate(date){
-    console.log("####" + date + "####");
+    //console.log("####" + date + "####");
     var fixedDate = date.split('-');
 
     // fixDate = fixDate[1]+"-"+fixDate[2]+"-"+fixDate[0];
     fixedDate = new Date(fixedDate[0], fixedDate[1]-1, fixedDate[2]);
-    console.log("#### FIXDATE : " + fixedDate + "####");
+    //console.log("#### FIXDATE : " + fixedDate + "####");
     var answer = "";
     answer = fixedDate.toString().substring(3,7) + " " + setNum(fixedDate.toString().substring(8,10)) + 
     " " + fixedDate.toString().substring(11,15);
@@ -110,7 +173,7 @@ window.onload = function(){
     // 4 = th
     // 5 = th
     num = num.toString();
-    console.log(num);
+    //console.log(num);
     if(num[1] == 1){
       num = num + "st";
     }else if(num[1] == 2){
@@ -142,7 +205,7 @@ window.onload = function(){
     "<b>" + nome + "</b>"+
     "</div>"+
     "<div style=\"font-size:11pt;font-family:Bahnschrift;color:black;display: inline-block;font-weight: normal;\">"+
-    (celular   == "+55 81" || celular.length < 14 ? "" : "Mobile: " + celular + "<br>") +
+    (celular   == "+55 81" ? "" : "Mobile: " + celular + "<br>") +
     "Corporate: " + corpPhone + "<br>" +
     (skypeId   == "" ? "":"Skype : " + skypeId + "<br>") +
     "<a href=\"mailto:"+ mail + "\" style=\"color:#17365D\">" + mail + "</a><br>"+
@@ -152,6 +215,7 @@ window.onload = function(){
     "<a href=\"http://www.midiavox.com.br\" target=\"_blank\"></a><br>" +
     "</div>" +
     "</th>" +
+    officeAlert +
     holidayAlert +
     vacationAlert +
     "</table>";
@@ -189,10 +253,14 @@ function setCheck(){
   if(document.getElementById("holidayCheck").checked){
     document.getElementsByClassName("holidayInput")[0].style.display = "table-row";
     document.getElementsByClassName("holidayInput")[1].style.display = "table-row";
+    document.getElementsByClassName("holidayContent")[0].style.display = "inline-block";
+    document.getElementsByClassName("holidayContent")[1].style.display = "table-row";
     isHoliday = true;
   }else{
     document.getElementsByClassName("holidayInput")[0].style.display = "none";
     document.getElementsByClassName("holidayInput")[1].style.display = "none";
+    document.getElementsByClassName("holidayContent")[0].style.display = "none";
+    document.getElementsByClassName("holidayContent")[1].style.display = "none";
     isHoliday = false;
   }
 
@@ -205,6 +273,17 @@ function setCheck(){
     document.getElementsByClassName("vacationInput")[1].style.display = "none";
     isVacation = false;
   }
+
+  if(document.getElementById("officeCheck").checked){
+    document.getElementsByClassName("officeInput")[0].style.display = "table-row";
+    document.getElementsByClassName("officeInput")[1].style.display = "table-row";
+    isOffice = true;
+  }else{
+    document.getElementsByClassName("officeInput")[0].style.display = "none";
+    document.getElementsByClassName("officeInput")[1].style.display = "none";
+    isOffice = false;
+  }
+
 }
 
 function detectBrowser() { 
@@ -235,3 +314,9 @@ function generateRodape(){
     // document.getElementById("outputImg").attributeStyleMap.delete("height");
     document.getElementById("outputImg").innerHTML = htmlText;
   }
+
+  window.addEventListener("load",function(event){
+    setTimeout(function() {
+      tryGenerateRodape();
+    }, 5);
+  });

@@ -9,7 +9,7 @@
 	<script src="generateMail.js"></script>
   </head>
   <body>
-	  <div id="capsule">
+	  <div id="capsule" oninput="waitToTry()">
 		  <div id="formArea">
 			  <table id="formTable">
 				  <tr>
@@ -54,8 +54,33 @@
 				</tr>
 				<tr>
 					<th>
+						<input type="checkbox" id="officeCheck" onclick="setCheck()">
+						<label>Aviso fora de escritório</label>
+					</th>
+				</tr>
+				<tr class="officeInput">
+					<th>
+						<label> Inicio :</label>
+					</th>
+					<th>
+						<input id="startOffice" type="date">
+					</th>
+				</tr>
+				<tr class="officeInput">
+					<th>
+						<label> Fim :</label>
+					</th>
+					<th>
+						<input id="endOffice" type="date">
+					</th>
+				</tr>
+				<tr>
+					<th>
 						<input type="checkbox" id="holidayCheck" onclick="setCheck()">
-						<label>Aviso de feriado</label><br>
+						<label>Aviso de feriado</label>
+					</th>
+					<th>
+						<button class="holidayContent" onclick="addHoliday()"> Adicionar </button>
 					</th>
 				</tr>
 				<tr class="holidayInput">
@@ -73,6 +98,10 @@
 					<th>
 						<input type="date" id="endHoliday">
 					</th>
+				</tr>
+				<tr class="holidayContent">
+					<th></th>
+					<th id="listEraseButt"></th>
 				</tr>
 				<tr>
 					<th>
@@ -97,7 +126,7 @@
 					</th>
 				</tr>
 			</table>
-			<button class="buttCopy" id="genSignButt" onclick="tryGenerateRodape()"> Gerar Assinatura</button>
+			<!-- <button class="buttCopy" id="genSignButt" onclick="tryGenerateRodape()"> Gerar Assinatura</button> -->
 		  </div>
 		  <div id="formResult">
 			<div id="outputImg">
